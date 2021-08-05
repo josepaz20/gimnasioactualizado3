@@ -1,0 +1,243 @@
+<?php
+//--------- CARGAR MENSAJES DE ALERTA ------------------------------------------
+//$formBusquedas = $this->formBusquedas;
+$flash = $this->flashMessenger();
+$notificaciones = [
+    'success' => array_merge($flash->getSuccessMessages(), $flash->getCurrentSuccessMessages()),
+    'error' => array_merge($flash->getErrorMessages(), $flash->getCurrentErrorMessages()),
+    'alert' => array_merge($flash->getMessages(), $flash->getCurrentMessages()),
+    'information' => array_merge($flash->getInfoMessages(), $flash->getCurrentInfoMessages()),
+    'warning' => array_merge($flash->getWarningMessages(), $flash->getCurrentWarningMessages()),
+];
+$flash->clearCurrentMessages('default');
+$flash->clearCurrentMessages('info');
+$flash->clearCurrentMessages('success');
+$flash->clearCurrentMessages('warning');
+$flash->clearCurrentMessages('error');
+$mostrarMensajes = '';
+foreach (array_filter($notificaciones) as $tipo => $mensajes) {
+    switch ($tipo) {
+        case 'success': $tipoAux = '[ OK ]';
+            break;
+        case 'error': $tipoAux = '[ ERROR ]';
+            break;
+        case 'alert': $tipoAux = '[ ALERTA ]';
+            break;
+        case 'information': $tipoAux = '[ INFORMACION ]';
+            break;
+        case 'warning': $tipoAux = '[ PRECAUCION ]';
+            break;
+    }
+    foreach ($mensajes as $mensaje) {
+        $mostrarMensajes .= '$.notify({
+                                    title: "<b>' . $tipoAux . ' -- </b>",
+                                    message: "<span style=\'font-size: 90%\'>' . $mensaje . '</span>"
+                                },{
+                                    type: "' . $tipo . '"
+                                });';
+    }
+}
+//------------------------------------------------------------------------------
+
+$title = 'REGISTRO DE CLIENTES';
+$this->headTitle($title);
+$this->headLink()->prependStylesheet($this->basePath('/public/css/animate.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/dataTables.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/buttons.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/responsive.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/scroller.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/green.css'));
+
+$this->headScript()->prependScript('
+                $(document).ajaxStop($.unblockUI); 
+                $(document).ready(function() {
+                    $("#tblIndex").DataTable({
+                        responsive: true,
+                        "iDisplayLength": 25,
+                            "sPaginationType": "full_numbers",
+                            "oLanguage": {
+                                "sLengthMenu": "Mostrar: _MENU_ registros por pagina",
+                                "sZeroRecords": "NO SE HA ENCONTRADO INFORMACION",
+                                "sInfo": "Mostrando <b>_START_</b> a <b>_END_</b> registros <br>TOTAL REGISTROS: <b>_TOTAL_</b> Registros</b>",
+                                "sInfoEmpty": "Mostrando 0 A 0 registros",
+                                "sInfoFiltered": "(Filtrados de un total de <b>_MAX_</b> registros)",
+                                "sLoadingRecords": "CARGANDO...",
+                                "sProcessing": "EN PROCESO...",
+                                "sSearch": "Buscar:",
+                                "sEmptyTable": "NO HAY INFORMACION DISPONIBLE PARA LA TABLA",
+                                "oPaginate": {
+                                    "sFirst": "<i class=\'fa fa-fast-backward\' aria-hidden=\'true\' title=\'Inicio\'></i>",
+                                    "sPrevious": "<i class=\'fa fa-step-backward\' aria-hidden=\'true\' title=\'Anterior\'></i>",
+                                    "sNext": "<i class=\'fa fa-step-forward\' aria-hidden=\'true\' title=\'Siguiente\'></i>",
+                                    "sLast": "<i class=\'fa fa-fast-forward\' aria-hidden=\'true\' title=\'Fin\'></i>",
+                                }
+                        },
+                        "aaSorting": [[0, "desc"]]
+                    });                
+                    //------------------------------------------------------------------------------
+                    // MANIPULACION DEL EVENTO DE CIERRE DEL MODAL
+                    //------------------------------------------------------------------------------
+                    $("#modalFormulario").on("hide.bs.modal", function (e) {
+                        return confirm("¿ DESEAS CERRAR EL FORMULARIO ?");
+                    });
+                    ' . $mostrarMensajes . '
+                });', 'text/javascript', array('noescape' => true))
+        ->prependFile($this->basePath('/public/js/sistema/cajaspersonales.js'))
+        ->prependFile($this->basePath('/public/js/jquery.blockUI.js'))
+        ->prependFile($this->basePath('/public/js/bootstrap-notify.min.js'))
+        ->prependFile($this->basePath('/public/js/datatables.scroller.min.js'))
+        ->prependFile($this->basePath('/public/js/responsive.bootstrap.js'))
+        ->prependFile($this->basePath('/public/js/dataTables.responsive.min.js'))
+        ->prependFile($this->basePath('/public/js/buttons.bootstrap.min.js'))
+        ->prependFile($this->basePath('/public/js/dataTables.buttons.min.js'))
+        ->prependFile($this->basePath('/public/js/dataTables.bootstrap.min.js'))
+        ->prependFile($this->basePath('/public/js/jquery.dataTables.min.js'));
+?>
+
+<div class="clearfix">
+    <div class="page-title">
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>CLIENTES REGISTRADOS </h2>
+                <div class="clearfix"></div>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>    
+                        <button type="button" onclick="verRegistrar()" class="btn btn-success" title="REGISTRAR UN CLIENTE"><i class="fa fa-plus"></i> REGISTRAR CLIENTE</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="x_content">
+                <p class="text-muted font-13 m-b-30">
+                    A continuación se listan todos los clientes registrados en el sistema.
+                </p>
+                <table id="tblIndex" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="50" width="100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>OPCIONES</th>
+                            <th>CLIENTE</th>
+                            <th>IDENTIFICACIÓN</th>
+                            <th>TELÉFONO</th>
+                            <th>ENTRENAMIENTO</th>
+                            <th>E-MAIL</th>
+                            <th>COSTO</th>
+                            <th>PAGO </th>
+                            <th>INGRESO</th>
+                            <th>DEVOLUCIÓN</th>
+                            <th>PENDIENTE</th>
+                            <th>FECHA DE REGISTRO</th>
+                            <th>FECHA DE RETIRO</th>
+                            <th>ESTADO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($this->registros as $registro) {
+                            switch ($registro['estado']) {
+                                case 1:
+                                    $tiposervicio = 'INTERNET';
+                                    break;
+                                case 2:
+                                    $tiposervicio = 'TELEVISION';
+                                    break;
+                                case 3:
+                                    $tiposervicio = 'HD';
+                                    break;
+                                default:
+                                    $tiposervicio = 'NO DEFINIDO';
+                                    break;
+                            }
+                            if ($registro['pendiente'] == '0') {
+                                $styleasignado = 'background: #AFA ';
+                                $titleasignado = 'CLIENTE A PAZ Y SALVO ';
+                            } else {
+                                $styleasignado = 'background:#FAA  ';
+                                $titleasignado = 'CLIENTE PENDIENTE DE PAGO';
+                            }
+                           
+                            
+//                            echo '<a href="javascript:verEliminar(' . $clienteOBJ->getIdCliente() . ')" title="ELIMINAR ESTE CLIENTE"><i class="fa fa-times"></i></a>';
+                            echo '&nbsp;&nbsp;';
+                            echo '<td style="' . $styleasignado . '" title="' . $titleasignado . '">' . $registro['idRegistro'] . '</td>';
+                            echo '<td>';
+                            if ($registro['estado'] == 'Registrado') {
+                                if ($registro['idEmpleado'] == NULL && $this->layout()->acl->isAllowed($this->rol, 'Ordenestrabajo\Controller\Administracion', 'asignar')) {
+                                    echo '<input type="checkbox" name="checkes[]" value="' . $registro['idOT'] . '"> - ';
+                                    echo '<a href="javascript:verAsignarOT(' . $registro['idOT'] . ', \'instalaciones\')" title="ASIGNAR ESTA OT DE INSTALACION A UN EMPLEADO"><i class="fa fa-user-circle-o"></i></a>';
+                                    echo '&nbsp;&nbsp;';
+                                }
+                            }
+
+
+                            echo '<a href="javascript:verEditar(' . $registro['idRegistro'] . ')" title="ACTUALIZAR LA INFORMACION DE ESTE CLIENTE."><i class="fa fa-edit"></i></a>';
+//                            echo '&nbsp;&nbsp;';
+//                            echo '<a href="javascript:verEliminar(' . $clienteOBJ->getIdCliente() . ')" title="ELIMINAR ESTE CLIENTE"><i class="fa fa-times"></i></a>';
+                            echo '&nbsp;&nbsp;';
+                            echo '<a href="javascript:verDetalle(' . $registro['idRegistro'] . ')" title="VER DETALLE DE LA INFORMACION DE ESTE CLIENTE."><i class="fa fa-eye"></i></a>';
+                            echo '&nbsp;&nbsp;';
+                            echo '<a href="" onclick="verEliminar(' . $registro['idRegistro'] . '); return false;" title="ELIMINAR REGISTRO DE CLIENTE"><i class="fa fa-close" aria-hidden="true"></i></a>';
+                            echo '&nbsp;&nbsp;';
+                            echo '<a href="" onclick="verActivar(' . $registro['idRegistro'] . '); return false;" title="ACTIVAR CLIENTE"><i class="fa fa-power-off" aria-hidden="true" aria-hidden="true"></i></a>';
+                            echo '&nbsp;&nbsp;';
+                            echo '<a href="/gimnasio/finanzas/cajaspersonales/imprimir/' . $registro['idRegistro'] . '" target="_blank" title="IMPRIMIR LA INFORMACIÓN DE ESTE CLIENTE"><i class="fa fa-print"></i>';
+                            echo '</td>';
+
+                            echo '<td>' . $registro['cliente'] . '</td>';
+                            echo '<td>' . $registro['identificacion'] . '</td>';
+                            echo '<td>' . $registro['telefono'] . '</td>';
+                            echo '<td>' . $registro['entrenamiento'] . '</td>';
+                            echo '<td>' . $registro['email'] . '</td>';
+                            echo '<td>' . $registro['valor'] . '</td>';
+                            echo '<td>' . $registro['pago'] . '</td>';
+                            echo '<td>' . $registro['ingreso'] . '</td>';
+                            echo '<td>' . $registro['devolucion'] . '</td>';
+                            echo '<td>' . $registro['pendiente'] . '</td>';
+                            echo '<td>' . $registro['fechahorareg'] . '</td>';
+                            echo '<td>' . $registro['fecharet'] . '</td>';
+                            echo '<td>' . $registro['estado'] . '</td>';
+
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalFormulario" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="overflow-y: scroll">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Formulario</h4>
+            </div>
+            <div class="modal-body">
+                <div style="padding: 10px" class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_content" id="divContenido"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <b>GIMNASIO GYM-JAM &copy Copyright <?php echo date('Y'); ?></b>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="msgBloqueo" style="display: none;"> 
+    SU SOLICITUD ESTA SIENDO PROCESADA, POR FAVOR ESPERE...
+</div>
+

@@ -1,0 +1,32 @@
+<?php
+$form = $this->form;
+$form->prepare();
+$hiddenInfoRegistro = '';
+$action = $form->getAttribute('action');
+if ($action == 'add') {
+    $hiddenInfoRegistro = 'hidden';
+}
+echo $this->form()->openTag($form);
+?>
+<fieldset>
+    <legend>Informacion de la Ubicacion</legend>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pk_departamento_id">pk_departamento_id</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('pk_departamento_id')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pk_municipio_id">pk_municipio_id</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('pk_municipio_id')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pk_centro_poblado_id">pk_centro_poblado_id</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('pk_centro_poblado_id')); ?>
+        </div>
+    </div>
+</fieldset>
+<?php echo $this->form()->closeTag(); ?>

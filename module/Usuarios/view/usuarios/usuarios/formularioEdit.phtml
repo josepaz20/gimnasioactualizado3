@@ -1,0 +1,121 @@
+<div class="clearfix"></div>
+<?php
+$form = $this->form;
+$form->prepare();
+$hiddenInfoRegistro = '';
+$action = $form->getAttribute('action');
+if ($action == 'add' || $action == 'buscar') {
+    $hiddenInfoRegistro = 'hidden';
+}
+echo $this->form()->openTag($form);
+?>
+<fieldset>
+    <legend>Informacion del Usuario</legend>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fk_empleado_id">Empleado <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php
+            $form->get('fk_empleado_id')->setAttribute('disabled', true);
+            echo $this->formRow($form->get('fk_empleado_id'));
+            ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="login">Login <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php
+            $form->get('login')->setAttribute('readonly', true);
+            echo $this->formRow($form->get('login'));
+            ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombresapellidos">Nombres y Apellidos<span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php
+            $form->get('nombresapellidos')->setAttribute('readonly', true);
+            echo $this->formRow($form->get('nombresapellidos'));
+            ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="sexo">Sexo <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('sexo')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fk_rol_id">Rol <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('fk_rol_id')); ?>
+        </div>
+    </div>
+</fieldset>
+<div class="ln_solid"></div>
+<fieldset <?php echo $hiddenInfoRegistro; ?>>
+    <legend>Informacion de Registro</legend>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pk_usuario_id">ID Usuario</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('pk_usuario_id')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="estado">Estado</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('estado')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="registradopor">Registrado Por</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('registradopor')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fechahorareg">Fecha Registro</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('fechahorareg')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modificadopor">Modificado Por</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('modificadopor')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fechahoramod">Fecha Modificacion</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('fechahoramod')); ?>
+        </div>
+    </div>
+</fieldset>
+<?php
+if ($action == 'buscar') {
+    echo "<div hidden>";
+}
+?>
+<div class="ln_solid"></div>
+<div class="form-group">
+    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+        <?php
+        if ($action != 'buscar') {
+            echo $this->formRow($form->get('btnCancelar'));
+            if ($action != 'detail') {
+                if ($action == 'delete') {
+                    echo $this->formSubmit($form->get('btnEnviar')->setValue('Eliminar'));
+                } else {
+                    echo $this->formSubmit($form->get('btnEnviar'));
+                }
+            }
+        }
+        ?>
+    </div>
+</div>
+<?php
+if ($action == 'buscar') {
+    echo "</div>";
+}
+?>
+<?php echo $this->form()->closeTag(); ?>

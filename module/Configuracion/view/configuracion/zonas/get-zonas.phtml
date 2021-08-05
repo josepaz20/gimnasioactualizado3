@@ -1,0 +1,7 @@
+<option value="">Seleccione...</option>
+<?php
+foreach ($this->zonas as $zona) {
+    $zonaOBJ = $zona['zonaOBJ'];
+    echo '<option value="' . $zonaOBJ->getPk_zona_id() . '">' . $zonaOBJ->getZona() . '</option>';
+}
+?>

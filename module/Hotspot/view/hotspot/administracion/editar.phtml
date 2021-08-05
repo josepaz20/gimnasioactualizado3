@@ -1,0 +1,200 @@
+<div class="clearfix"></div>
+<?php
+$form = $this->form;
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<fieldset>
+    <legend>Informacion del Hotspot</legend>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tipocliente">Tipo Hotspot</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php
+            if ($this->idRol != 1) {
+                $form->get('tipohotspot')->setAttribute('disabled', true);
+            }
+            echo $this->formRow($form->get('tipocliente'));
+            ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="idTipoIdentificacion">Tipo Identificacion</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php
+            if ($this->idRol != 1) {
+                $form->get('idTipoIdentificacion')->setAttribute('disabled', true);
+            }
+            echo $this->formRow($form->get('idTipoIdentificacion'));
+            ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="identificacion">Identificacion</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php
+            if ($this->idRol != 1) {
+                $form->get('identificacion')->setAttribute('readonly', true);
+            }
+            echo $this->formRow($form->get('identificacion'));
+            ?>
+        </div>
+    </div>
+    <?php if ($form->get('tipocliente')->getValue() == 'Persona Natural') { ?>
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombres">Nombres</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <?php
+                if ($this->idRol != 1) {
+                    $form->get('nombres')->setAttribute('readonly', true);
+                }
+                echo $this->formRow($form->get('nombres'));
+                ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="apellidos">Apellidos</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <?php
+                if ($this->idRol != 1) {
+                    $form->get('apellidos')->setAttribute('readonly', true);
+                }
+                echo $this->formRow($form->get('apellidos'));
+                ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="sexo">Sexo</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <?php
+                if ($this->idRol != 1) {
+                    $form->get('sexo')->setAttribute('disabled', true);
+                }
+                echo $this->formRow($form->get('sexo'));
+                ?>
+            </div>
+        </div>
+        <input type="hidden" id="razonsocial" name="razonsocial" value="">
+        <input type="hidden" id="representantelegal" name="representantelegal" value="">
+    <?php } else { ?>
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="razonsocial">Razon Social</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <?php
+                if ($this->idRol != 1) {
+                    $form->get('razonsocial')->setAttribute('readonly', true);
+                }
+                echo $this->formRow($form->get('razonsocial'));
+                ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="representantelegal">Representante Legal</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <?php
+                if ($this->idRol != 1) {
+                    $form->get('representantelegal')->setAttribute('readonly', true);
+                }
+                echo $this->formRow($form->get('representantelegal'));
+                ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="identificacionreprelegal" title="IDENTIFICACION DEL REPRESENTANTE LEGAL.">Identificacion</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <?php
+                if ($this->idRol != 1) {
+                    $form->get('identificacionreprelegal')->setAttribute('readonly', true);
+                }
+                echo $this->formRow($form->get('identificacionreprelegal'));
+                ?>
+            </div>
+        </div>
+        <input type="hidden" id="nombres" name="nombres" value="">
+        <input type="hidden" id="apellidos" name="apellidos" value="">
+        <input type="hidden" id="sexo" name="sexo" value="Masculino">
+    <?php } ?>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="telefono">Telefono</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('telefono')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="celular1">Celular 1</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('celular1')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="celular2">Celular 2</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('celular2')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="celular3">Celular 3</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('celular3')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="emailcontacto">Email Contacto</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('emailcontacto')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="emailfacturacion">Email Facturacion</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('emailfacturacion')); ?>
+        </div>
+    </div>
+</fieldset>
+<div class="ln_solid"></div>
+<fieldset>
+    <legend>Informacion de Registro</legend>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="idHotspot">ID Hotspot</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('idHotspot')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="estado">Estado</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('estado')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="registradopor">Registrado Por</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('registradopor')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modificadopor">Modificado Por</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('modificadopor')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fechahorareg">Fecha Registro</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('fechahorareg')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fechahoramod">Fecha Modificacion</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('fechahoramod')); ?>
+        </div>
+    </div>
+</fieldset>
+<div class="ln_solid"></div>
+<div class="form-group">
+    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Cerrar</button>
+        <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Guardar</button>
+    </div>
+</div>
+<?php echo $this->form()->closeTag(); ?>

@@ -1,0 +1,194 @@
+<div class="clearfix"></div>
+<div class="form">
+    <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+    <div id="trafico"></div>
+    <div class="ln_solid"></div>
+    <div class="form-group">
+        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+            <input type="text" id="interface" name="interface" value="<?php echo $this->interface; ?>">
+            <button type="button" name="btnCancelar" class="btn btn-danger" data-dismiss="modal" value="Cerrar"><i class="fa fa-times-circle"></i> Cerrar</button>
+            <button type="submit" name="btnEnviar" class="btn btn-success"><i class="fa fa-save"></i> Guardar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function formatBytes(a, b) {
+        if (0 == a)
+            return"0 Bytes";
+        var c = 1024, d = b || 2, e = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"], f = Math.floor(Math.log(a) / Math.log(c));
+        return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f]
+    }
+
+    var chart;
+    function requestDatta(interface) {
+        $.ajax({
+            url: 'gettrafico?interface=' + interface,
+            datatype: "json",
+            success: function (data) {
+                var midata = JSON.parse(data);
+                if (midata.length > 0) {
+                    var TX = parseInt(midata[0].data);
+                    var RX = parseInt(midata[1].data);
+                    var x = (new Date()).getTime();
+                    shift = chart.series[0].data.length > 19;
+                    chart.series[0].addPoint([x, TX], true, shift);
+                    chart.series[1].addPoint([x, RX], true, shift);
+                    document.getElementById("trafico").innerHTML = formatBytes(TX) + " / " + formatBytes(RX);
+                } else {
+                    document.getElementById("trafico").innerHTML = "- / -";
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.error("Status: " + textStatus + " request: " + XMLHttpRequest);
+                console.error("Error: " + errorThrown);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        Highcharts.createElement('link', {
+            href: 'https://fonts.googleapis.com/css?family=Signika:400,700',
+            rel: 'stylesheet',
+            type: 'text/css'
+        }, null, document.getElementsByTagName('head')[0]);
+
+        // Add the background image to the container
+        Highcharts.wrap(Highcharts.Chart.prototype, 'getContainer', function (proceed) {
+            proceed.call(this);
+            this.container.style.background = 'url(https://www.highcharts.com/samples/graphics/sand.png)';
+        });
+
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            },
+            colors: ['#40d30e', '#8085e9', '#8d4654', '#7798BF', '#aaeeee',
+                '#ff0066', '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+            chart: {
+                backgroundColor: null,
+                style: {
+                    fontFamily: 'Signika, serif'
+                }
+            },
+            title: {
+                style: {
+                    color: 'black',
+                    fontSize: '16px',
+                    fontWeight: 'bold'
+                }
+            },
+            subtitle: {
+                style: {
+                    color: 'black'
+                }
+            },
+            tooltip: {
+                borderWidth: 0
+            },
+            legend: {
+                itemStyle: {
+                    fontWeight: 'bold',
+                    fontSize: '13px'
+                }
+            },
+            xAxis: {
+                labels: {
+                    style: {
+                        color: '#6e6e70'
+                    }
+                }
+            },
+            yAxis: {
+                labels: {
+                    style: {
+                        color: '#6e6e70'
+                    }
+                }
+            },
+            plotOptions: {
+                series: {
+                    shadow: true
+                },
+                candlestick: {
+                    lineColor: '#404048'
+                },
+                map: {
+                    shadow: false
+                }
+            },
+
+            // Highstock specific
+            navigator: {
+                xAxis: {
+                    gridLineColor: '#D0D0D8'
+                }
+            },
+            rangeSelector: {
+                buttonTheme: {
+                    fill: 'white',
+                    stroke: '#C0C0C8',
+                    'stroke-width': 1,
+                    states: {
+                        select: {
+                            fill: '#D0D0D8'
+                        }
+                    }
+                }
+            },
+            scrollbar: {
+                trackBorderColor: '#C0C0C8'
+            },
+            background2: '#E0E0E8'
+        });
+
+
+        chart = new Highcharts.Chart({
+            chart: {
+                plotOptions: {
+                    areaspline: {
+                        fillOpacity: 0.5
+                    }
+                },
+                type: 'areaspline',
+                renderTo: 'container',
+                animation: Highcharts.svg,
+                events: {
+                    load: function () {
+                        var cont = 0;
+                        idInterval = setInterval(function () {
+                            requestDatta($("#interface").val());
+                            cont++;
+                            if (parseInt(cont) === 30) {
+                                clearInterval(idInterval);
+                            }
+                        }, 2000);
+                    }
+                }
+            },
+            title: {
+                text: 'Monitoring'
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150,
+                maxZoom: 20 * 1000
+            },
+            yAxis: {
+                minPadding: 0.2,
+                maxPadding: 0.2,
+                title: {
+                    text: 'Trafico',
+                    margin: 80
+                }
+            },
+            series: [{
+                    name: 'Download(TX)',
+                    data: []
+                }, {
+                    name: 'Upload(RX)',
+                    data: []
+                }]
+        });
+    });
+</script>

@@ -1,0 +1,140 @@
+<div class="clearfix"></div>
+<?php
+$form = $this->form;
+$form->prepare();
+$hiddenInfoRegistro = '';
+$action = $form->getAttribute('action');
+if ($action == 'add' || $action == 'buscar') {
+    $hiddenInfoRegistro = 'hidden';
+}
+echo $this->form()->openTag($form);
+?>
+<fieldset>
+    <legend>Informacion del Usuario</legend>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fk_empleado_id">Empleado <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('fk_empleado_id')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="idSucursalAsignada">Sucursal Asignada<span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <select id="idSucursalAsignada" name="idSucursalAsignada" class="form-control" required>
+                <option value="">Seleccione...</option>
+                <option value="3">TESALIA</option>
+                <option value="4">PAICOL</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fk_rol_id">Rol <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('fk_rol_id')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="login">Login <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('login')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="password">Password <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="input-group">
+                <?php echo $this->formRow($form->get('password')); ?>
+                <span class="input-group-btn">
+                    <button onmousedown="mostrarPassword(true)" onmouseup="mostrarPassword(false)" class="btn btn-default" type="button" title="Presionar para ver password"><span class="fa fa-eye"></span></button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="passwordConfirm">Confirmar Password <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="input-group">
+                <?php echo $this->formRow($form->get('passwordConfirm')); ?>
+                <span class="input-group-btn">
+                    <button onmousedown="mostrarPasswordConfirm(true)" onmouseup="mostrarPasswordConfirm(false)" class="btn btn-default" type="button" title="Presionar para ver password"><span class="fa fa-eye"></span></button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombresapellidos">Nombres y Apellidos<span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('nombresapellidos')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="sexo">Sexo <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('sexo')); ?>
+        </div>
+    </div>
+</fieldset>
+<div class="ln_solid"></div>
+<fieldset <?php echo $hiddenInfoRegistro; ?>>
+    <legend>Informacion de Registro</legend>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pk_usuario_id">ID Usuario</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('pk_usuario_id')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="estado">Estado</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('estado')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="registradopor">Registrado Por</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('registradopor')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fechahorareg">Fecha Registro</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('fechahorareg')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modificadopor">Modificado Por</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('modificadopor')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fechahoramod">Fecha Modificacion</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('fechahoramod')); ?>
+        </div>
+    </div>
+</fieldset>
+<?php
+if ($action == 'buscar') {
+    echo "<div hidden>";
+}
+?>
+<div class="ln_solid"></div>
+<div class="form-group">
+    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+        <?php
+        if ($action != 'buscar') {
+            echo $this->formRow($form->get('btnCancelar'));
+            if ($action != 'detail') {
+                echo $this->formSubmit($form->get('btnEnviar'));
+            }
+        }
+        ?>
+    </div>
+</div>
+<?php
+if ($action == 'buscar') {
+    echo "</div>";
+}
+?>
+<?php echo $this->form()->closeTag(); ?>

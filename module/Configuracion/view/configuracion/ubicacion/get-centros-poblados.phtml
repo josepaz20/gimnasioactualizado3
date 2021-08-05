@@ -1,0 +1,6 @@
+<option value="">Seleccione...</option>
+<?php
+foreach ($this->centrospoblados as $poblado) {
+    echo '<option value="' . $poblado->getPk_centro_poblado_id() . '">' . $poblado->getCentropoblado() . '</option>';
+}
+?>

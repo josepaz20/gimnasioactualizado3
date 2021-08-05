@@ -1,0 +1,95 @@
+<div class="clearfix"></div>
+<?php
+$form = $this->form;
+$form->prepare();
+$hiddenInfoRegistro = '';
+$disabledSeleccionarSede = '';
+$action = $form->getAttribute('action');
+if ($action == 'add' || $action == 'buscar') {
+    $hiddenInfoRegistro = 'hidden';
+}
+if ($action == 'detail' || $action == 'delete') {
+    $disabledSeleccionarSede = 'disabled';
+}
+echo $this->form()->openTag($form);
+?>
+<fieldset>
+    <legend>Informacion de la Zona</legend>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="idSucursal">Sucursal <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('idSucursal')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="zona">Zona <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('zona')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="observacion">Observacion</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('observacion')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="estado">Estado</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('estado')); ?>
+        </div>
+    </div>
+</fieldset>
+<div class="ln_solid"></div>
+<fieldset <?php echo $hiddenInfoRegistro; ?>>
+    <legend>Informacion de Registro</legend>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pk_zona_id">ID Zona</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('pk_zona_id')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="registradopor">Registrado Por</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('registradopor')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fechahorareg">Fecha Registro</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('fechahorareg')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="modificadopor">Modificado Por</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('modificadopor')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fechahoramod">Fecha Modificacion</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('fechahoramod')); ?>
+        </div>
+    </div>
+</fieldset>
+<div class="ln_solid"></div>
+<div class="form-group">
+    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+        <?php
+        echo $this->formRow($form->get('btnCancelar'));
+        if ($action != 'detail') {
+            switch ($action) {
+                case 'delete':
+                    echo $this->formSubmit($form->get('btnEnviar')->setValue('Eliminar'));
+                    break;
+                default:
+                    echo $this->formSubmit($form->get('btnEnviar'));
+                    break;
+            }
+        }
+        ?>
+    </div>
+</div>
+<?php echo $this->form()->closeTag(); ?>

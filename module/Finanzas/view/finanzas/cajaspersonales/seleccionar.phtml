@@ -1,0 +1,37 @@
+<p class="text-muted font-13 m-b-30">
+    A continuacion se listan todos los CLIENTES encontrados en el sistema.
+</p><br>
+<div style="overflow-x: scroll; padding-right: 5%">
+    <table id="tblSeleccionar" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>CLIENTE</th>
+                <th>IDENTIFICACION</th>
+                <th>ESTADO</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            foreach ($this->clientes as $clienteOBJ) {
+                echo '<tr>';
+                echo '<td>' . $clienteOBJ->getIdCliente() . '</td>';
+                echo '<td>';
+                if ($clienteOBJ->getTipocliente() == 'Persona Natural') {
+                    echo'<a href="javascript:selectCliente(' . $clienteOBJ->getIdCliente() . ')" title="SELECCIONAR ESTE CLIENTE">' . trim($clienteOBJ->getNombres()) . ' ' . trim($clienteOBJ->getApellidos()) . '</a>';
+                } else {
+                    echo'<a href="javascript:selectCliente(' . $clienteOBJ->getIdCliente() . ')" title="SELECCIONAR ESTE CLIENTE">' . trim($clienteOBJ->getRazonsocial()) . '</a>';
+                }
+                echo '</td>';
+                echo '<td>' . $clienteOBJ->getIdentificacion() . '</td>';
+                echo '<td>' . $clienteOBJ->getEstado() . '</td>';
+                echo '<td>';
+                echo '<a href="javascript:selectCliente(' . $clienteOBJ->getIdCliente() . ')" title="SELECCIONAR ESTE CLIENTE"><i class="fa fa-check"></i></a>';
+                echo '</td>';
+                echo '</tr>';
+            }
+            ?>
+        </tbody>
+    </table>
+</div>

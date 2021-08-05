@@ -1,0 +1,251 @@
+<?php
+//--------- CARGAR MENSAJES DE ALERTA ------------------------------------------
+//$formBusquedas = $this->formBusquedas;
+$flash = $this->flashMessenger();
+$notificaciones = [
+    'success' => array_merge($flash->getSuccessMessages(), $flash->getCurrentSuccessMessages()),
+    'error' => array_merge($flash->getErrorMessages(), $flash->getCurrentErrorMessages()),
+    'alert' => array_merge($flash->getMessages(), $flash->getCurrentMessages()),
+    'information' => array_merge($flash->getInfoMessages(), $flash->getCurrentInfoMessages()),
+    'warning' => array_merge($flash->getWarningMessages(), $flash->getCurrentWarningMessages()),
+];
+$flash->clearCurrentMessages('default');
+$flash->clearCurrentMessages('info');
+$flash->clearCurrentMessages('success');
+$flash->clearCurrentMessages('warning');
+$flash->clearCurrentMessages('error');
+$mostrarMensajes = '';
+foreach (array_filter($notificaciones) as $tipo => $mensajes) {
+    switch ($tipo) {
+        case 'success': $tipoAux = '[ OK ]';
+            break;
+        case 'error': $tipoAux = '[ ERROR ]';
+            break;
+        case 'alert': $tipoAux = '[ ALERTA ]';
+            break;
+        case 'information': $tipoAux = '[ INFORMACION ]';
+            break;
+        case 'warning': $tipoAux = '[ PRECAUCION ]';
+            break;
+    }
+    foreach ($mensajes as $mensaje) {
+        $mostrarMensajes .= '$.notify({
+                                    title: "<b>' . $tipoAux . ' -- </b>",
+                                    message: "<span style=\'font-size: 90%\'>' . $mensaje . '</span>"
+                                },{
+                                    type: "' . $tipo . '"
+                                });';
+    }
+}
+//------------------------------------------------------------------------------
+
+$title = 'Clientes ';
+$this->headTitle($title);
+$this->headLink()->prependStylesheet($this->basePath('/public/css/animate.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/dataTables.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/buttons.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/responsive.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/scroller.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/green.css'));
+
+$this->headScript()->prependScript('
+                $(document).ajaxStop($.unblockUI); 
+                $(document).ready(function() {
+                    $("#tblIndex").DataTable({
+                        responsive: true,
+                        "iDisplayLength": 25,
+                            "sPaginationType": "full_numbers",
+                            "oLanguage": {
+                                "sLengthMenu": "Mostrar: _MENU_ registros por pagina",
+                                "sZeroRecords": "NO SE HA ENCONTRADO INFORMACION",
+                                "sInfo": "Mostrando <b>_START_</b> a <b>_END_</b> registros <br>TOTAL REGISTROS: <b>_TOTAL_</b> Registros</b>",
+                                "sInfoEmpty": "Mostrando 0 A 0 registros",
+                                "sInfoFiltered": "(Filtrados de un total de <b>_MAX_</b> registros)",
+                                "sLoadingRecords": "CARGANDO...",
+                                "sProcessing": "EN PROCESO...",
+                                "sSearch": "Buscar:",
+                                "sEmptyTable": "NO HAY INFORMACION DISPONIBLE PARA LA TABLA",
+                                "oPaginate": {
+                                    "sFirst": "<i class=\'fa fa-fast-backward\' aria-hidden=\'true\' title=\'Inicio\'></i>",
+                                    "sPrevious": "<i class=\'fa fa-step-backward\' aria-hidden=\'true\' title=\'Anterior\'></i>",
+                                    "sNext": "<i class=\'fa fa-step-forward\' aria-hidden=\'true\' title=\'Siguiente\'></i>",
+                                    "sLast": "<i class=\'fa fa-fast-forward\' aria-hidden=\'true\' title=\'Fin\'></i>",
+                                }
+                        },
+                        "aaSorting": [[0, "desc"]]
+                    });                
+                    //------------------------------------------------------------------------------
+                    // MANIPULACION DEL EVENTO DE CIERRE DEL MODAL
+                    //------------------------------------------------------------------------------
+                    $("#modalFormulario").on("hide.bs.modal", function (e) {
+                        return confirm("¿ DESEAS CERRAR EL FORMULARIO ?");
+                    });
+                    ' . $mostrarMensajes . '
+                });', 'text/javascript', array('noescape' => true))
+        ->prependFile($this->basePath('/public/js/sistema/clientes.js'))
+        ->prependFile($this->basePath('/public/js/jquery.blockUI.js'))
+        ->prependFile($this->basePath('/public/js/bootstrap-notify.min.js'))
+        ->prependFile($this->basePath('/public/js/datatables.scroller.min.js'))
+        ->prependFile($this->basePath('/public/js/responsive.bootstrap.js'))
+        ->prependFile($this->basePath('/public/js/dataTables.responsive.min.js'))
+        ->prependFile($this->basePath('/public/js/buttons.bootstrap.min.js'))
+        ->prependFile($this->basePath('/public/js/dataTables.buttons.min.js'))
+        ->prependFile($this->basePath('/public/js/dataTables.bootstrap.min.js'))
+        ->prependFile($this->basePath('/public/js/jquery.dataTables.min.js'));
+?>
+<div class="page-title">
+    <div class="title_left">
+        <h3><i class="fa fa-file-text"></i> Hotspot <small>ADMINISTRACION</small></h3>
+    </div>
+    <div class="title_right">
+        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Buscar...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">IR!</button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Busqueda <small>FILTROS</small></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <p class="text-muted font-13 m-b-30">
+                    Utilice los siguientes Filtros Busqueda para obtener los clientes registrados en el sistema.
+                </p>
+                <div class="ln_solid"></div>
+                <?php
+                $form = $this->formBusquedas;
+                $form->prepare();
+                echo $this->form()->openTag($form);
+                ?>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="identificacionFiltro">Identificacion</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <?php echo $this->formRow($form->get('identificacionFiltro')); ?>
+                    </div>
+                </div>
+                <div class="ln_solid"></div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombresFiltro">Nombre(s)</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <?php echo $this->formRow($form->get('nombresFiltro')); ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="apellidosFiltro">Apellido(s)</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <?php echo $this->formRow($form->get('apellidosFiltro')); ?>
+                    </div>
+                </div>
+                <div class="ln_solid"></div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="razonsocialFiltro">Razon Social</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <?php echo $this->formRow($form->get('razonsocialFiltro')); ?>
+                    </div>
+                </div>
+                <div class="ln_solid"></div>
+                <div class="form-group">
+                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                        <button type="button" onclick="limpiarBusqueda()" class="btn btn-dark"><i class="fa fa-eraser"></i> Limpiar</button>
+                    </div>
+                </div>
+                <?php echo $this->form()->closeTag(); ?>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Registros del Sistema <small>Hotspot</small></h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <p class="text-muted font-13 m-b-30">
+                    A continuacion se listan todos los Hotspot registrados en el sistema.
+                </p>
+                <table id="tblIndex" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th></th>
+                            <th>IDENTIFICACION</th>
+                            <th>Hotspot</th>
+                            <th>ESTADO</th>
+                            <th>REGISTRADO POR</th>
+                            <th>FECHA REGISTRO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($this->hotspot as $hotspotOBJ) {
+                            echo '<tr>';
+                            echo '<td>' . $hotspotOBJ->getIdHotspot() . '</td>';
+                            echo '<td>';
+                            echo '<a href="javascript:verEditar(' . $hotspotOBJ->getIdHotspot() . ')" title="ACTUALIZAR LA INFORMACION DE ESTE CLIENTE"><i class="fa fa-edit"></i></a>';
+//                            echo '&nbsp;&nbsp;';
+//                            echo '<a href="javascript:verEliminar(' . $clienteOBJ->getIdCliente() . ')" title="ELIMINAR ESTE CLIENTE"><i class="fa fa-times"></i></a>';
+                            echo '&nbsp;&nbsp;';
+                            echo '<a href="javascript:verDetalle(' . $hotspotOBJ->getIdHotspot() . ')" title="VER DETALLE DE ESTE CLIENTE"><i class="fa fa-eye"></i></a>';
+                            echo '</td>';
+                            echo '<td>' . $hotspotOBJ->getIdentificacion() . '</td>';
+                            if ($hotspotOBJ->getTipocliente() == 'Persona Natural') {
+                                echo '<td>' . trim($hotspotOBJ->getNombres()) . ' ' . trim($hotspotOBJ->getApellidos()) . '</td>';
+                            } else {
+                                echo '<td>' . $hotspotOBJ->getRazonsocial() . '</td>';
+                            }
+                            echo '<td>' . $hotspotOBJ->getEstado() . '</td>';
+                            echo '<td>' . $hotspotOBJ->getRegistradopor() . '</td>';
+                            echo '<td>' . $hotspotOBJ->getFechahorareg() . '</td>';
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalFormulario" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="overflow-y: scroll">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Formulario</h4>
+            </div>
+            <div class="modal-body">
+                <div style="padding: 10px" class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_content" id="divContenido"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <b>DOBLECLICK SOFTWARE E INGENIERIA S.A.S. &copy Copyright <?php echo date('Y'); ?></b>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="msgBloqueo" style="display: none;"> 
+    SU SOLICITUD ESTA SIENDO PROCESADA, POR FAVOR ESPERE...
+</div>
+

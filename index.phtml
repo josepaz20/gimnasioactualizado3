@@ -1,0 +1,370 @@
+<?php
+$nombreUsuario = 'SESION NO INICIADA';
+if ($sesionUsuario = $this->identity()) {
+    $nombreUsuario = $this->escapeHtml($sesionUsuario->nombresapellidos);
+    $sexo = $this->escapeHtml($sesionUsuario->sexo);
+    if ($sexo == 'Masculino') {
+        $ao = 'o';
+    } else {
+        $ao = 'a';
+    }
+}
+//--------- CARGAR MENSAJES DE ALERTA ------------------------------------------
+$flash = $this->flashMessenger();
+$notificaciones = [
+    'success' => array_merge($flash->getSuccessMessages(), $flash->getCurrentSuccessMessages()),
+    'error' => array_merge($flash->getErrorMessages(), $flash->getCurrentErrorMessages()),
+    'alert' => array_merge($flash->getMessages(), $flash->getCurrentMessages()),
+    'information' => array_merge($flash->getInfoMessages(), $flash->getCurrentInfoMessages()),
+    'warning' => array_merge($flash->getWarningMessages(), $flash->getCurrentWarningMessages()),
+];
+$flash->clearCurrentMessages('default');
+$flash->clearCurrentMessages('info');
+$flash->clearCurrentMessages('success');
+$flash->clearCurrentMessages('warning');
+$flash->clearCurrentMessages('error');
+$mostrarMensajes = '';
+foreach (array_filter($notificaciones) as $tipo => $mensajes) {
+    switch ($tipo) {
+        case 'success': $tipoAux = '[ OK ]';
+            break;
+        case 'error': $tipoAux = '[ ERROR ]';
+            break;
+        case 'alert': $tipoAux = '[ ALERTA ]';
+            break;
+        case 'information': $tipoAux = '[ INFORMACION ]';
+            break;
+        case 'warning': $tipoAux = '[ PRECAUCION ]';
+            break;
+    }
+    foreach ($mensajes as $mensaje) {
+        $mostrarMensajes .= '$.notify({
+                                    title: "<b>' . $tipoAux . ' -- </b>",
+                                    message: "<span style=\'font-size: 90%\'>' . $mensaje . '</span>"
+                                },{
+                                    type: "' . $tipo . '"
+                                });';
+    }
+}
+//------------------------------------------------------------------------------
+
+$title = 'GYMNASIO GYM-JAM ';
+$this->headTitle($title);
+$this->headLink()->prependStylesheet($this->basePath('/public/css/animate.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/dataTables.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/buttons.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/responsive.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/scroller.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/green.css'));
+
+$this->headScript()->prependScript('
+                $(document).ajaxStop($.unblockUI); 
+                $(document).ready(function() {
+                    $("#tblIndex").DataTable({
+                        responsive: true,
+                        "iDisplayLength": 25,
+                            "sPaginationType": "full_numbers",
+                            "oLanguage": {
+                                "sLengthMenu": "Mostrar: _MENU_ registros por pagina",
+                                "sZeroRecords": "NO SE HA ENCONTRADO INFORMACION",
+                                "sInfo": "Mostrando <b>_START_</b> a <b>_END_</b> registros <br>TOTAL REGISTROS: <b>_TOTAL_</b> Registros</b>",
+                                "sInfoEmpty": "Mostrando 0 A 0 registros",
+                                "sInfoFiltered": "(Filtrados de un total de <b>_MAX_</b> registros)",
+                                "sLoadingRecords": "CARGANDO...",
+                                "sProcessing": "EN PROCESO...",
+                                "sSearch": "Buscar:",
+                                "sEmptyTable": "NO HAY INFORMACION DISPONIBLE PARA LA TABLA",
+                                "oPaginate": {
+                                    "sFirst": "<i class=\'fa fa-fast-backward\' aria-hidden=\'true\' title=\'Inicio\'></i>",
+                                    "sPrevious": "<i class=\'fa fa-step-backward\' aria-hidden=\'true\' title=\'Anterior\'></i>",
+                                    "sNext": "<i class=\'fa fa-step-forward\' aria-hidden=\'true\' title=\'Siguiente\'></i>",
+                                    "sLast": "<i class=\'fa fa-fast-forward\' aria-hidden=\'true\' title=\'Fin\'></i>",
+                                }
+                        },
+                        "aaSorting": [[0, "desc"]]
+                    });                
+                    //------------------------------------------------------------------------------
+                    // MANIPULACION DEL EVENTO DE CIERRE DEL MODAL
+                    //------------------------------------------------------------------------------
+                    $("#modalFormulario").on("hide.bs.modal", function (e) {
+                        return confirm("¿ DESEAS CERRAR EL FORMULARIO ?");
+                    });              
+                    //------------------------------------------------------------------------------
+                    // TECLA ENTER PARA LA BUSQUEDA DEL ABONADO
+                    //------------------------------------------------------------------------------
+                    $("#identificacionBusq").keypress(function(e) {
+                        var code = (e.keyCode ? e.keyCode : e.which);
+                        if (code == 13) {
+                            consultarAbonado();
+                        }
+                    });                    
+                    ' . $mostrarMensajes . '
+                });', 'text/javascript', array('noescape' => true))
+        ->prependFile($this->basePath('/public/js/sistema/inicio.js?06Marzo2020'))
+        ->prependFile($this->basePath('/public/js/jquery.blockUI.js'))
+        ->prependFile($this->basePath('/public/js/bootstrap-notify.min.js'))
+        ->prependFile($this->basePath('/public/js/datatables.scroller.min.js'))
+        ->prependFile($this->basePath('/public/js/responsive.bootstrap.js'))
+        ->prependFile($this->basePath('/public/js/dataTables.responsive.min.js'))
+        ->prependFile($this->basePath('/public/js/buttons.bootstrap.min.js'))
+        ->prependFile($this->basePath('/public/js/dataTables.buttons.min.js'))
+        ->prependFile($this->basePath('/public/js/dataTables.bootstrap.min.js'))
+        ->prependFile($this->basePath('/public/js/jquery.dataTables.min.js'));
+//------------------------------------------------------------------------------
+$idRolConsultaAbonado = array(1, 3, 12, 14, 16, 17);
+$idRolLegalizaciones = array(1, 12, 16, 17);
+//------------------------------------------------------------------------------        
+$idRolAprovisionamiento = array(13, 16, 17);
+$idRolAsignacionOT = array(6);
+$idRolInstalaciones = array(5, 6, 7);
+$idRolCortes = array(5, 6, 7);
+$idRolTraslados = array(5, 6, 7);
+$idRolMantenimientos = array(5, 6, 7);
+$idRolVentasSinEntregar = array(3, 16, 17);
+$idRolMigracion = array(1);
+?>
+<div class="page-title">
+    <div class="title_center">
+        <h3><i class="fa fa-thumbs-o-up"></i> <?php echo strtoupper("BIENVENIDO AL MENU PRINCIPAL DE  UNIVERSAL GYM-JAM") ?> <small></small></h3>
+    </div>
+    <div class="title_right">
+        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Busqueda <small>FILTROS</small></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <p class="text-muted font-13 m-b-30">
+                    Utilice los siguientes Filtros Busqueda para obtener los  registros de el sistema.
+                </p>
+                <div class="ln_solid"></div>
+                <?php if (in_array($this->idRol, $idRolConsultaAbonado)) { ?>
+                    <div class="col-lg-4 col-md-20">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-20">
+                                        <i class="fa fa-user-circle-o fa-5x"></i>
+                                    </div> &nbsp;
+                                    <div class="col-xs-9 text-right">                        
+                                        <div><b>REGISTRAR<br>CLIENTE</b></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+
+                                <a href="<?php echo $this->url('finanzas/default', array('controller' => 'cajaspersonales', 'action' => 'index')) ?>">
+                                    <div class="panel-footer">
+                                        <span class="pull-left">VER DETALLES</span>
+                                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </a>                       
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+                <?php if (in_array($this->idRol, $idRolConsultaAbonado)) { ?>
+                    <div class="col-lg-4 col-md-20">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-20">
+                                        <i class="fa fa-shopping-basket fa-5x"></i>
+                                    </div> &nbsp; ;
+                                    <div class="col-xs-9 text-right">                        
+                                        <div><b>VENDER<br>PRODUCTO</b></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+
+                                <a href="<?php echo $this->url('finanzas/default', array('controller' => 'productos', 'action' => 'index')) ?>">
+                                    <div class="panel-footer">
+                                        <span class="pull-left">VER DETALLES</span>
+                                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </a>                       
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+                <?php if (in_array($this->idRol, $idRolConsultaAbonado)) { ?>
+                    <div class="col-lg-4 col-md-20">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-20">
+                                        <i class="fa fa fa-bicycle fa-5x"></i>
+                                    </div> ;
+                                    <div class="col-xs-9 text-right">                        
+                                        <div><b>CONSULTAR<br>MATERIALES</b></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <a href="<?php echo $this->url('registro/default', array('controller' => 'registro', 'action' => 'index')) ?>">
+                                    <div class="panel-footer">
+                                        <span class="pull-left">VER DETALLES</span>
+                                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+                <?php if (in_array($this->idRol, $idRolConsultaAbonado)) { ?>
+                    <div class="col-lg-4 col-md-20">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-20">
+                                        <i class="fa fa-shopping-basket fa-5x"></i>
+                                    </div> ;
+                                    <div class="col-xs-9 text-right">                        
+                                        <div><b>CONSULTAR<br>PRODUCTOS</b></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+
+                                <a href="<?php echo $this->url('producto/default', array('controller' => 'producto', 'action' => 'index')) ?>">
+                                    <div class="panel-footer">
+                                        <span class="pull-left">VER DETALLES</span>
+                                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+                <?php if (in_array($this->idRol, $idRolConsultaAbonado)) { ?>
+                    <div class="col-lg-4 col-md-20">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-20">
+                                        <i class="fa fa-users fa-5x"></i>
+                                    </div> ;
+                                    <div class="col-xs-9 text-right">                        
+                                        <div><b>CONSULTAR<br>EMPLEADOS</b></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+
+                                <a href="<?php echo $this->url('talentohumano/default', array('controller' => 'empleado', 'action' => 'index')) ?>">
+                                    <div class="panel-footer">
+                                        <span class="pull-left">VER DETALLES</span>
+                                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+                <?php if (in_array($this->idRol, $idRolConsultaAbonado)) { ?>
+                    <div class="col-lg-4 col-md-20">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-20">
+                                        <i class="fa fa-address-card fa-5x"></i>
+                                    </div> ;
+                                    <div class="col-xs-9 text-right">                        
+                                        <div><b>CONSULTAR<br>CONTRATOS LABORALES</b></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+
+                                <a href="<?php echo $this->url('talentohumano/default', array('controller' => 'contrato-laboral', 'action' => 'index')) ?>">
+                                    <div class="panel-footer">
+                                        <span class="pull-left">VER DETALLES</span>
+                                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+
+            </div>
+        </div>
+    </div>   
+
+</div>
+
+
+<div class="modal fade" id="modalFormulario" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="overflow-y: scroll">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Formulario</h4>
+            </div>
+            <div class="modal-body">
+                <div style="padding: 10px" class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_content" id="divContenido"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <b>DOBLECLICK SOFTWARE  S.A.S. Copyright <?php echo date('Y'); ?></b>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalAux" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="overflow-y: scroll">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Formulario</h4>
+            </div>
+            <div class="modal-body">
+                <div style="padding: 10px" class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_content" id="divContenidoAux"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <b>DOBLECLICK  . &copy Copyright <?php echo date('Y'); ?></b>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="msgBloqueo" style="display: none;"> 
+    SU SOLICITUD ESTA SIENDO PROCESADA, POR FAVOR ESPERE...
+</div>
+
+<script>
+    $(".right_col").attr('style', 'height: 1000px;');
+</script>

@@ -1,0 +1,52 @@
+<div class="clearfix"></div>
+<?php
+$form = $this->form;
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<fieldset>
+    <legend>Cambio de Contraseña</legend>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="passwordactual">Contraseña Actual <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="input-group">
+                <?php echo $this->formRow($form->get('passwordactual')); ?>
+                <span class="input-group-btn">
+                    <button onmousedown="mostrarPassword(true, 'passwordactual')" onmouseup="mostrarPassword(false, 'passwordactual')" class="btn btn-default" type="button" title="Presionar para ver contraseña"><span class="fa fa-eye"></span></button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nuevopassword">Nueva Contraseña <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="input-group">
+                <?php echo $this->formRow($form->get('password')); ?>
+                <span class="input-group-btn">
+                    <button onmousedown="mostrarPassword(true, 'password')" onmouseup="mostrarPassword(false, 'password')" class="btn btn-default" type="button" title="Presionar para ver contraseña"><span class="fa fa-eye"></span></button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="passwordConfirm">Confirmar Contraseña <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="input-group">
+                <?php echo $this->formRow($form->get('passwordConfirm')); ?>
+                <span class="input-group-btn">
+                    <button onmousedown="mostrarPassword(true, 'passwordConfirm')" onmouseup="mostrarPassword(false, 'passwordConfirm')" class="btn btn-default" type="button" title="Presionar para ver contraseña"><span class="fa fa-eye"></span></button>
+                </span>
+            </div>
+        </div>
+    </div>
+</fieldset>
+<div class="ln_solid"></div>
+<div class="form-group">
+    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+        <?php
+        echo $this->formRow($form->get('btnCancelar'));
+        echo $this->formSubmit($form->get('btnEnviar'));
+        ?>
+    </div>
+</div>
+<?php echo $this->form()->closeTag(); ?>

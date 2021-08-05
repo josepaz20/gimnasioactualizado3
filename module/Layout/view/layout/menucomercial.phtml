@@ -1,0 +1,78 @@
+<?php
+$nombreUsuario = 'SESION NO INICIADA';
+if ($sesionUsuario = $this->identity()) {
+    $nombreUsuario = $this->escapeHtml($sesionUsuario->nombresapellidos);
+    $sexo = $this->escapeHtml($sesionUsuario->sexo);
+    if ($sexo == 'Masculino') {
+        $ao = 'o';
+    } else {
+        $ao = 'a';
+    }
+}
+?>
+<div class="col-md-3 left_col">
+    <div class="left_col scroll-view">
+
+        <div class="navbar nav_title" style="border: 0;">
+            <img src="/josandro/public/img/logoJosandro_positivo.png" style="width: 80%" alt="Josandro - Gimnasio GYM-JAM S.A.S."/> <br><br>
+        </div>
+
+        <div class="profile"><!--img_2 -->
+            <div class="profile_pic">
+                <?php
+                if ($sexo == 'Masculino') {
+                    echo '<img src="/josandro/public/img/perfil_M.png" alt="" class="img-circle profile_img">';
+                } else {
+                    echo '<img src="/josandro/public/img/perfil_F.png" alt="" class="img-circle profile_img">';
+                }
+                ?>
+            </div>
+            <div class="profile_info">
+                <span>Bienvenid<?php echo $ao; ?>,</span>
+                <h2><?php echo $nombreUsuario; ?></h2> <br>
+                <a href="<?php echo $this->url('login/default', array('controller' => 'login', 'action' => 'cerrarSesion')) ?>" class="btn btn-danger" title="CERRAR SU SESION DE USUARIO">Cerrar Sesion</a> 
+            </div>
+        </div>
+        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+            <div class="menu_section">
+                <h3>Menu General</h3>
+                <ul class="nav side-menu">
+                    <li>
+                        <a href="<?php echo $this->url('comercial/default', array('controller' => 'inicio', 'action' => 'bandejaEntrada')) ?>"><i class="fa fa-home"></i> Inicio</a>
+                    </li>
+                    <li><a><i class="fa fa-briefcase"></i> Abonados <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a>Empresas <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li class="sub_menu"><a href="<?php echo $this->url('comercial/default', array('controller' => 'empresa', 'action' => 'index')) ?>">Clientes</a></li>
+                                    <li class="sub_menu"><a href="<?php echo $this->url('contratacion/default', array('controller' => 'contrato', 'action' => 'empresa')) ?>">Contratos</a></li>
+                                </ul>
+                            </li>
+                            <li><a>Personas <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li><a href="<?php echo $this->url('comercial/default', array('controller' => 'persona', 'action' => 'index')) ?>">Clientes</a></li>
+                                    <li><a href="<?php echo $this->url('contratacion/default', array('controller' => 'contrato', 'action' => 'persona')) ?>">Contratos</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li> 
+                </ul>
+            </div>
+        </div>
+
+        <div class="sidebar-footer hidden-small">
+            <a data-toggle="tooltip" data-placement="top" title="Configuracion" style="color: #efc614">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+            </a>
+            <a data-toggle="tooltip" data-placement="top" title="Pantalla Completa" style="color: #efc614">
+                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+            </a>
+            <a data-toggle="tooltip" data-placement="top" title="Bloquear" style="color: #efc614">
+                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+            </a>
+            <a href="<?php echo $this->url('login/default', array('controller' => 'login', 'action' => 'cerrarSesion')) ?>" data-toggle="tooltip" data-placement="top" title="Salir" style="color: #efc614">
+                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,6 @@
+<option value="">Seleccione...</option>
+<?php
+foreach ($this->municipios as $mcpo) {
+    echo '<option value="' . $mcpo->getIdMunicipio() . '">' . $mcpo->getMunicipio() . '</option>';
+}
+?>

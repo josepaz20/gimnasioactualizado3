@@ -1,0 +1,35 @@
+<p class="text-muted font-13 m-b-30">
+    A continuacion se listan todas las empleados registradas en el sistema que no han sido anexadas al actual Contrato.
+</p><br>
+<div style="overflow: scroll">
+    <table id="tblEmpleado" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>IDENTIFICACION</th>
+                <th>APELLIDOS</th>
+                <th>NOMBRES</th>
+                <th>TELEFONO</th>
+                <th>ESTADO</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            foreach ($this->empleados as $empleado) {
+                echo '<tr>';
+                echo '<td>' . $empleado->getPk_empleado_id() . '</td>';
+                echo '<td>' . $empleado->getIdentificacion() . '</td>';
+                echo '<td>' . $empleado->getPrimerApellido() . ' ' . $empleado->getSegundoApellido() . '</td>';
+                echo '<td>' . $empleado->getPrimerNombre() . ' ' . $empleado->getSegundoNombre() . '</td>';
+                echo '<td>' . $empleado->getTelefono() . '</td>';
+                echo '<td>' . $empleado->getEstado() . '</td>';
+                echo '<td>';
+                echo '<a href="" onclick="selectEmpleado(' . $empleado->getpk_empleado_id() . '); return false;" title="Seleccionar este Empleado"><i class="fa fa-check"></i></a>';
+                echo '</td>';
+                echo '</tr>';
+            }
+            ?>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,101 @@
+.chat {
+    height: 300px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    background: #333;
+    padding: 5px;
+    overflow: scroll;
+}
+
+.cliente {
+    padding: 10px;
+    border-radius: 5px;
+    margin-right: 100px;
+    margin-top: 5px;
+    background: #C7EDFC;
+    font-size: 12px;
+}
+
+.asesor {
+    padding: 10px;
+    border-radius: 5px;
+    margin-left: 200px;
+    margin-top: 5px;
+    background: #E5F7FD;
+    font-size: 12px;
+}
+
+.nuevoMensaje {
+    width: 480px !important;
+}
+
+.btnChat {
+    width: 110px !important;
+    float: right;
+    margin-left: 10px !important;
+    padding: 0px !important;
+    cursor: pointer;
+}
+
+.btnChat:hover {
+    border: 1px solid #000 !important;
+    font-weight: bolder;
+}
+
+.archivosAdjuntos {
+    font-size: 15px;
+    color: #FF0;
+    width: 510px;
+}
+
+.ordenesTrabajo {
+    font-size: 15px;
+    color: #FF0;
+    width: 300px;
+    margin-left: 500px;
+    margin-top: -35px;
+}
+
+.efectoParpadeo {
+    animation: parpadeo 1s;
+    -webkit-animation: parpadeo 1s;
+    -moz-animation: parpadeo 1s;
+    animation-iteration-count: 3;
+    -webkit-animation-iteration-count: 3;
+    -moz-animation-iteration-count: 3;
+}
+
+@keyframes parpadeo { 
+    0% {background-color: #FF5}
+    100%{background-color: #E5F7FD} 
+}
+
+@-webkit-keyframes parpadeo { 
+    0% {background-color: #FF5}
+    100%{background-color: #E5F7FD} 
+}
+
+.efectoParpadeo_1 {
+    animation: parpadeo_1 1s;
+    -webkit-animation: parpadeo_1 1s;
+    -moz-animation: parpadeo_1 1s;
+    animation-iteration-count: 5;
+    -webkit-animation-iteration-count: 5;
+    -moz-animation-iteration-count: 5;
+}
+
+@keyframes parpadeo_1 { 
+    0% {background-color: #FF0}
+    100%{background-color: #FFF} 
+}
+
+@-webkit-keyframes parpadeo_1 { 
+    0% {background-color: #FF0}
+    100%{background-color: #FFF} 
+}
+
+.msgServer {
+    background: #FF5;
+    padding: 10px;
+    border-radius: 8px;
+}

@@ -1,0 +1,76 @@
+<div class="clearfix"></div>
+<div class="form-horizontal form-label-left">
+    <legend>Informacion del Empleado</legend>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="idEmpleado">ID Empleado</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="text" id="idEmpleado" name="idEmpleado" value="<?php echo $this->infoEmpleado['idEmpleado']; ?>" class="form-control" readonly>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="empleado">Empleado</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="text" id="empleado" name="empleado" value="<?php echo $this->infoEmpleado['empleado']; ?>" class="form-control" readonly>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="identificacion">Identificacion</label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="text" id="identificacion" name="identificacion" value="<?php echo $this->infoEmpleado['identificacionempleado']; ?>" class="form-control" readonly>
+        </div>
+    </div>
+    <div class="ln_solid"></div>
+    <fieldset>
+        <legend>Informacion de Ventas</legend>
+        <table id="tablaCobros" class="table table-bordered table-striped table-condensed">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>CLIENTE</th>
+                    <th>IDENTIFICACION</th>
+                    <th>SERVICIO</th>
+                    <th>VLR INSTALACION</th>
+                    <th>VLR ENTREGADO</th>
+                    <th>SALDO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if (count($this->cobros) > 0) {
+                    $hayRegistros = false;
+                    foreach ($this->cobros as $cobro) {
+                        $saldo = intval($cobro['vlrinstalacion']) - intval($cobro['vlrentregado']);
+                        if ($saldo > 0) {
+                            echo '<tr>';
+                            echo '<td>' . $cobro['idCobroInstalacion'] . '</td>';
+                            echo '<td>' . $cobro['cliente'] . '</td>';
+                            echo '<td>' . $cobro['identificacion'] . '</td>';
+                            echo '<td>' . $cobro['conceptofacturacion'] . '</td>';
+                            echo '<td>' . number_format($cobro['vlrinstalacion']) . '</td>';
+                            echo '<td>' . number_format($cobro['vlrentregado']) . '</td>';
+                            echo '<td>' . number_format($saldo) . '</td>';
+                            echo '</tr>';
+                            $hayRegistros = true;
+                        }
+                    }
+                    if (!$hayRegistros) {
+                        echo '<tr>';
+                        echo '<td colspan="8">EL EMPLEADO &nbsp; <b>' . $this->infoEmpleado['empleado'] . '</b> &nbsp; NO TIENE VENTAS PENDIENTES POR ENTREGAR.</td>';
+                        echo '</tr>';
+                    }
+                } else {
+                    echo '<tr>';
+                    echo '<td colspan="8">EL EMPLEADO &nbsp; <b>' . $this->infoEmpleado['empleado'] . '</b> &nbsp; NO TIENE VENTAS PENDIENTES POR ENTREGAR.</td>';
+                    echo '</tr>';
+                }
+                ?>
+            </tbody>
+        </table>
+    </fieldset>
+    <div class="ln_solid"></div>
+    <div class="form-group">
+        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Cerrar</button>
+        </div>
+    </div>
+</div>

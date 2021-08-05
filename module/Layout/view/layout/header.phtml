@@ -1,0 +1,58 @@
+<?php
+$nombreUsuario = 'SESION NO INICIADA';
+$titleNombreUsuario = 'SESION NO INICIADA';
+$idSucursal = '';
+if ($sesionUsuario = $this->identity()) {
+    $idSucursal = $sesionUsuario->idSucursal;
+    $nombreUsuario = $this->escapeHtml($sesionUsuario->nombresapellidos);
+    $loginUsuario = $this->escapeHtml($sesionUsuario->login);
+    $sexo = $this->escapeHtml($sesionUsuario->sexo);
+    $titleNombreUsuario = 'Has iniciado sesion como usuario ' . $loginUsuario;
+}
+?>
+<!-- top navigation -->
+<div class="top_nav">
+    <div class="nav_menu">
+        <nav class="" role="navigation">
+            <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+            </div>
+            <div style="padding: 10px; width: 200px" class="nav navbar-nav navbar-left">
+                <select id="idSucursalLogin" name="idSucursalLogin" onchange="cambiarSucursal(this.value)" class="form-control">
+                    <?php
+                    $idsSucursales = explode(';', $idSucursal);
+                    foreach ($idsSucursales as $id) {
+                        switch ($id) {
+                            case 3:
+                                
+                          
+                        }
+                    }
+                    ?>                   
+                </select>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                    <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <?php
+                        if ($sexo == 'Masculino') {
+                            echo '<img src="/gimnasio/public/img/gimnasio.png" alt="">';
+                        } else {
+                            echo '<img src="/josandro/public/img/perfil_F.png" alt="">';
+                        }
+                        ?>
+                        <span style="color: #ef2614; font-weight: bold"><?php echo $nombreUsuario; ?></span>
+                        <span class=" fa fa-angle-down"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-usermenu pull-right">
+                        <li><a href="javascript:verCambiarcontrasena();">Cambiar Contraseña</a></li>
+                        <li><a href="javascript:;">Ayuda</a></li>
+                        <li><a href="<?php echo $this->url('login/default', array('controller' => 'login', 'action' => 'cerrarSesion')) ?>"><i class="fa fa-sign-out pull-right"></i> Salir</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<!-- /top navigation -->
+

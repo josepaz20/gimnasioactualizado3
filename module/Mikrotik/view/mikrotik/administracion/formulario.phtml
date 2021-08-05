@@ -1,0 +1,88 @@
+<div class="clearfix"></div>
+<?php
+$form = $this->form;
+$form->prepare();
+$hiddenInfoRegistro = '';
+$action = $form->getAttribute('action');
+if ($action == 'add') {
+    $hiddenInfoRegistro = 'hidden';
+}
+echo $this->form()->openTag($form);
+?>
+<fieldset>
+    <legend>Informacion de Queue</legend>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="idqueue">ID <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('idqueue')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="target">Dirección IP <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('target')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="queue">Queue <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('name')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="velbasubida">Vel. Subida <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('velsubida')); ?>
+        </div>
+        <label class="control-label">Mbps.</label>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="velbajada">Vel. Bajada <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('velbajada')); ?>
+        </div>
+        <label class="control-label">Mbps.</label>
+    </div>
+</fieldset>
+<div class="ln_solid"></div>
+<fieldset>
+    <legend>Informacion de Consumo</legend>
+    <div class="form-group">
+        <label class="control-label col-md-7 col-sm-5 col-xs-12" for="consumobasubida">Los datos de consumo se actualizan cada 5 segundos durante 1 Minuto.</label>
+    </div>
+    <div class="form-group" id="divInfoConsumo">
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="consumobasubida">Carga <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('consumosubida')); ?>
+        </div>
+        <label class="control-label">Mbps.</label>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="consumobajada">Descarga <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('consumobajada')); ?>
+        </div>
+        <label class="control-label">Mbps.</label>
+    </div>
+    <div class="ln_solid"></div>
+</fieldset>
+<div class="form-group">
+    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+        <?php
+        echo $this->formRow($form->get('btnCancelar'));
+        if ($action != 'detail') {
+            switch ($action) {
+                case 'delete':
+                    echo $this->formSubmit($form->get('btnEnviar')->setValue('Eliminar'));
+                    break;
+                default:
+//                    echo $this->formSubmit($form->get('btnEnviar'));
+                    break;
+            }
+        }
+        ?>
+    </div>
+</div>
+<?php echo $this->form()->closeTag(); ?>

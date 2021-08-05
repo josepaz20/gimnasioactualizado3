@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+    <head>
+        <title>RECIBO DE PRODUCTO</title>
+        <style>
+            @page {
+                margin-top: 10px;
+            }
+            body {
+                font-family: arial;
+            }
+            div.vert1 {
+                position: absolute;
+                left: -245px;
+                font-size: 11px;
+                top: 225px;
+            }
+            .texto-vertical-2 {
+                writing-mode: vertical-lr;
+                transform: rotate(270deg);
+            }
+            table {
+                border-collapse: collapse; 
+            }
+            td {
+                border: 1px solid #555;
+                font-size: 12px;
+                padding: 2px 5px;
+            }
+            p{
+                margin: 1px 0 0px 0;
+            }
+            .detalleTitulo2 {
+                font-weight: bold;
+                background: silver;
+                color: black;
+                letter-spacing: 2px;
+                font-size: 15px;
+                text-align: center;
+            }
+            .oval {
+                width: 150px;
+                height: 20px;
+                -moz-border-radius: 50%;
+                -webkit-border-radius: 50%;
+                border-radius: 50%;
+                border:1px solid red;
+                box-shadow: 0px 5px 5px #1C1C1C;
+            }
+            .numFactura {
+                font-weight: bold; 
+                padding: 10px; 
+                font-size: 16px; 
+                text-align: center;
+                border: 1px solid #555;
+                border-radius: 5px;
+            }
+            .titulo {
+                background: #AAA; 
+                font-weight: bold; 
+                text-align: center;
+            }
+            .bordes {
+                border: 1px solid #000;
+            }
+            .centrado {
+                text-align: center;
+            }
+            .noBordeTopBottom {
+                border-top: none;
+                border-bottom: none;
+            }
+        </style>
+    </head>
+    <body>
+        <table border="0" width="100%">
+            <tr>
+                <td style="width: 25%">
+                    <img src="public/img/gimnasio.png" alt="" width="200">
+                    <!--<img src="D:xampp/htdocs/josandro/public/img/logoAlpavision.png" alt="" width="200">--> 
+                </td>
+                <td style="width: 50%; text-align: center">
+                    <b>GIMNASIO GYM-JAM</b><br>
+                    <b>NIT:</b> 34540096-7 Regimen Comun<br>
+                    <b>DIRECCIÓN:</b> Barrio Panamericana-Timbio-Cauca<br>
+                    <b>TELEFONO CELULAR:</b>3226807995 <br>
+                    <b>WEB:</b> www.alpavision.com <br>
+                </td>
+                <td style="width: 25%">
+                    <div class="numFactura titulo">Registro No.</div>
+                    <div class="numFactura">{idRegistro}</div>
+                </td>
+            </tr>
+        </table> 
+
+        <table width="100%">
+            <tr>
+                <td class="titulo" style="width: 15%">Producto</td>
+                <td colspan="4">{producto}</td>
+                <td class="titulo" style="width: 15%">Proveedor</td>
+                <td colspan="2">{proveedor}</td>
+               
+            </tr>
+            <tr>
+                <td class="titulo">Cantidad</td>
+                <td colspan="4">{cantidad}</td>
+                <td class="titulo">Teléfono</td>
+                <td colspan="2" class="centrado">{telefono}</td>
+            </tr>
+            <tr>
+                <td class="titulo">Fecha de Ingreso</td>
+                <td colspan="7">{fechahorareg}</td>
+            </tr>
+            
+            <tr>
+                <td class="titulo">Estado</td>
+                <td colspan="7">{estado}</td>
+                
+            </tr>
+           
+            
+        </table> <br>
+        
+        
+        <div class="titulo bordes">REPORTE DE LA ACTIVA REALIZADA</div>
+        <table width="100%">
+            <tr>
+                <td><br><br></td>
+            </tr>
+        </table>
+        <div class="titulo bordes">OBSERVACIONES DEL CLIENTE</div>
+        <table width="100%">
+            <tr>
+                <td style="width: 60%">Sr usuario, por favor califique el servicio prestado por el personal tecnico</td>
+                <td class="noBordeTopBottom"></td>
+                <td class="titulo" style="width: 7%">Bueno</td>
+                <td></td>
+                <td class="noBordeTopBottom"></td>
+                <td class="titulo" style="width: 7%">Regular</td>
+                <td></td>
+                <td class="noBordeTopBottom"></td>
+                <td class="titulo" style="width: 7%">Malo</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style="width: 60%">Sr usuario, por favor califique la presentacion del personal tecnico</td>
+                <td class="noBordeTopBottom"></td>
+                <td class="titulo" style="width: 7%">Bueno</td>
+                <td></td>
+                <td class="noBordeTopBottom"></td>
+                <td class="titulo" style="width: 7%">Regular</td>
+                <td></td>
+                <td class="noBordeTopBottom"></td>
+                <td class="titulo" style="width: 7%">Malo</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style="width: 60%">El personal tecnico le explico la guia de usuario</td>
+                <td class="noBordeTopBottom"></td>
+                <td class="titulo" style="width: 7%">Si</td>
+                <td></td>
+                <td class="noBordeTopBottom"></td>
+                <td class="titulo" style="width: 7%">No</td>
+                <td></td>
+                <td class="noBordeTopBottom"></td>
+                <td class="titulo" style="width: 7%"></td>
+                <td></td>
+            </tr>
+        </table> 
+        <table width="100%">
+            <tr>
+                <td class="titulo" style="width: 15%">Firma del Cliente</td>
+                <td><br><br><br></td>
+                <td class="titulo" style="width: 15%">Firma Encargado</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="titulo" style="width: 15%">Nombre</td>
+                <td></td>
+                <td class="titulo" style="width: 15%">Encargado</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="titulo" style="width: 15%">Identificacion</td>
+                <td></td>
+                <td class="titulo" style="width: 15%">Identificacion</td>
+                <td></td>
+            </tr>
+        </table>
+    </body>
+</html>

@@ -1,0 +1,86 @@
+<?php
+if (defined('RUNNING_FROM_ROOT')) {
+    $this->plugin('basePath')->setBasePath($this->basePath() . '/public');
+}
+//--------- CARGAR MENSAJES DE ALERTA ------------------------------------------
+$flash = $this->flashMessenger();
+$notificaciones = [
+    'success' => array_merge($flash->getSuccessMessages(), $flash->getCurrentSuccessMessages()),
+    'error' => array_merge($flash->getErrorMessages(), $flash->getCurrentErrorMessages()),
+    'alert' => array_merge($flash->getMessages(), $flash->getCurrentMessages()),
+    'information' => array_merge($flash->getInfoMessages(), $flash->getCurrentInfoMessages()),
+    'warning' => array_merge($flash->getWarningMessages(), $flash->getCurrentWarningMessages()),
+];
+$flash->clearCurrentMessages('default');
+$flash->clearCurrentMessages('info');
+$flash->clearCurrentMessages('success');
+$flash->clearCurrentMessages('warning');
+$flash->clearCurrentMessages('error');
+$mostrarMensajes = '';
+foreach (array_filter($notificaciones) as $tipo => $mensajes) {
+    switch ($tipo) {
+        case 'success': $tipoAux = '[ OK ]';
+            break;
+        case 'error': $tipoAux = '[ ERROR ]';
+            break;
+        case 'alert': $tipoAux = '[ ALERTA ]';
+            break;
+        case 'information': $tipoAux = '[ INFORMACION ]';
+            break;
+        case 'warning': $tipoAux = '[ PRECAUCION ]';
+            break;
+    }
+    foreach ($mensajes as $mensaje) {
+        $mostrarMensajes .= '$.notify({
+                                title: "<b>' . $tipoAux . ' -- </b>",
+                                message: "<span style=\'font-size: 90%\'>' . $mensaje . '</span>"
+                            },{
+                                type: "' . $tipo . '"
+                            });';
+    }
+}
+//------------------------------------------------------------------------------
+echo $this->doctype();
+?>
+<html lang="es">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- Meta, title, CSS, favicons, etc. -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Gimnasio Gym-Jam :: Inicio de Sesion</title>
+
+        <!-- Bootstrap -->
+        <link href="/josandro/public/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link href="/josandro/public/css/font-awesome.min.css" rel="stylesheet">
+        <link href="<?php echo $this->basePath('/css/animate.min.css'); ?>" rel="stylesheet">
+
+        <!-- Custom Theme Style -->
+        <link href="<?php echo $this->basePath('/css/custom.css'); ?>" rel="stylesheet">
+        <script type="text/javascript" charset="utf-8" src="<?php echo $this->basePath('/js/jquery.min.js'); ?>"></script>
+        <script type="text/javascript" charset="utf-8" src="<?php echo $this->basePath('/js/bootstrap-notify.min.js'); ?>"></script>
+        <script>
+            $(document).ready(function () {<?php echo $mostrarMensajes; ?>
+            });
+        </script>        
+    </head>
+
+    <body style="background: url(<?php echo $this->basePath('img/gimnasio.png' ) ?>) center center no-repeat fixed; background-size:650px">
+        <div class="">
+            <a class="hiddenanchor" id="toregister"></a>
+            <a class="hiddenanchor" id="tologin"></a>
+
+            <div id="wrapper">
+                <div id="divLogin" class="form">
+                    <section class="login_content">
+                        <?php echo $this->content; ?>
+                    </section>
+                </div>
+
+            </div>
+        </div>
+    </body>
+</html>

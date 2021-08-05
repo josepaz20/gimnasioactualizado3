@@ -1,0 +1,204 @@
+<?php
+//--------- CARGAR MENSAJES DE ALERTA ------------------------------------------
+//$formBusquedas = $this->formBusquedas;
+$flash = $this->flashMessenger();
+$notificaciones = [
+    'success' => array_merge($flash->getSuccessMessages(), $flash->getCurrentSuccessMessages()),
+    'error' => array_merge($flash->getErrorMessages(), $flash->getCurrentErrorMessages()),
+    'alert' => array_merge($flash->getMessages(), $flash->getCurrentMessages()),
+    'information' => array_merge($flash->getInfoMessages(), $flash->getCurrentInfoMessages()),
+    'warning' => array_merge($flash->getWarningMessages(), $flash->getCurrentWarningMessages()),
+];
+$flash->clearCurrentMessages('default');
+$flash->clearCurrentMessages('info');
+$flash->clearCurrentMessages('success');
+$flash->clearCurrentMessages('warning');
+$flash->clearCurrentMessages('error');
+$mostrarMensajes = '';
+foreach (array_filter($notificaciones) as $tipo => $mensajes) {
+    switch ($tipo) {
+        case 'success': $tipoAux = '[ OK ]';
+            break;
+        case 'error': $tipoAux = '[ ERROR ]';
+            break;
+        case 'alert': $tipoAux = '[ ALERTA ]';
+            break;
+        case 'information': $tipoAux = '[ INFORMACION ]';
+            break;
+        case 'warning': $tipoAux = '[ PRECAUCION ]';
+            break;
+    }
+    foreach ($mensajes as $mensaje) {
+        $mostrarMensajes .= '$.notify({
+                                    title: "<b>' . $tipoAux . ' -- </b>",
+                                    message: "<span style=\'font-size: 90%\'>' . $mensaje . '</span>"
+                                },{
+                                    type: "' . $tipo . '"
+                                });';
+    }
+}
+//------------------------------------------------------------------------------
+
+$title = 'Pregunta Registros';
+$this->headTitle($title);
+$this->headLink()->prependStylesheet($this->basePath('/public/css/animate.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/dataTables.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/buttons.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/responsive.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/scroller.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/green.css'));
+
+$this->headScript()->prependScript('
+                $(document).ajaxStop($.unblockUI); 
+                $(document).ready(function() {
+                    $("#tblIndex").DataTable({
+                        responsive: true,
+                        "iDisplayLength": 25,
+                            "sPaginationType": "full_numbers",
+                            "oLanguage": {
+                                "sLengthMenu": "Mostrar: _MENU_ registros por pagina",
+                                "sZeroRecords": "NO SE HA ENCONTRADO INFORMACION",
+                                "sInfo": "Mostrando <b>_START_</b> a <b>_END_</b> registros <br>TOTAL REGISTROS: <b>_TOTAL_</b> Registros</b>",
+                                "sInfoEmpty": "Mostrando 0 A 0 registros",
+                                "sInfoFiltered": "(Filtrados de un total de <b>_MAX_</b> registros)",
+                                "sLoadingRecords": "CARGANDO...",
+                                "sProcessing": "EN PROCESO...",
+                                "sSearch": "Buscar:",
+                                "sEmptyTable": "NO HAY INFORMACION DISPONIBLE PARA LA TABLA",
+                                "oPaginate": {
+                                    "sFirst": "<i class=\'fa fa-fast-backward\' aria-hidden=\'true\' title=\'Inicio\'></i>",
+                                    "sPrevious": "<i class=\'fa fa-step-backward\' aria-hidden=\'true\' title=\'Anterior\'></i>",
+                                    "sNext": "<i class=\'fa fa-step-forward\' aria-hidden=\'true\' title=\'Siguiente\'></i>",
+                                    "sLast": "<i class=\'fa fa-fast-forward\' aria-hidden=\'true\' title=\'Fin\'></i>",
+                                }
+                        },
+                        "aaSorting": [[0, "desc"]]
+                    });                
+                    //------------------------------------------------------------------------------
+                    // MANIPULACION DEL EVENTO DE CIERRE DEL MODAL
+                    //------------------------------------------------------------------------------
+                    $("#modalFormulario").on("hide.bs.modal", function (e) {
+                        return confirm("¿ DESEAS CERRAR EL FORMULARIO ?");
+                    });
+                    ' . $mostrarMensajes . '
+                });', 'text/javascript', array('noescape' => true))
+        ->prependFile($this->basePath('/public/js/sistema/respuesta.js'))
+        ->prependFile($this->basePath('/public/js/jquery.blockUI.js'))
+        ->prependFile($this->basePath('/public/js/bootstrap-notify.min.js'))
+        ->prependFile($this->basePath('/public/js/datatables.scroller.min.js'))
+        ->prependFile($this->basePath('/public/js/responsive.bootstrap.js'))
+        ->prependFile($this->basePath('/public/js/dataTables.responsive.min.js'))
+        ->prependFile($this->basePath('/public/js/buttons.bootstrap.min.js'))
+        ->prependFile($this->basePath('/public/js/dataTables.buttons.min.js'))
+        ->prependFile($this->basePath('/public/js/dataTables.bootstrap.min.js'))
+        ->prependFile($this->basePath('/public/js/jquery.dataTables.min.js'));
+?>
+<div class="page-title">
+    <div class="title_left">
+        <h3><i class="fa fa-file-text"></i> Respuestas <small>ADMINISTRACION</small></h3>
+    </div>
+    <div class="title_right">
+        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Buscar...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">IR!</button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Busqueda <small>FILTROS</small></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Registros del Sistema <small>RESPUESTAS REGISTRADAS</small></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>    
+                        <button type="button" onclick="verRegistrar()" class="btn btn-success" title="REGISTRAR UNA PREGUNTA"><i class="fa fa-plus"></i> Registrar Respuesta</button>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <p class="text-muted font-13 m-b-30">
+                    A continuacion se listan todas las respuestas registradas en el sistema.
+                </p>
+                <table id="tblIndex" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th></th>
+                            <th>Respuesta</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($this->respuestas as $respuesta) {
+                            echo '<tr>';
+                            echo '<td>' . $respuesta['idRespuesta'] . '</td>';
+                            echo '<td>';
+                            echo '<a href="javascript:verEditar(' . $respuesta ['idRespuesta'] . ')" title="ACTUALIZAR LA INFORMACION DE ESTA RESPUESTA"><i class="fa fa-edit"></i></a>';
+//                            echo '&nbsp;&nbsp;';
+                            echo '<a href="javascript:verDetalle(' . $respuesta['idRespuesta'] . ')" title="VER DETALLE DEL REGISTRO DE ESTA RESPUESTA"><i class="fa fa-eye"></i></a>';
+
+                            echo '&nbsp;&nbsp;';
+                            echo '<a href="" onclick="verEliminar(' . $respuesta['idRespuesta'] . '); return false;" title="ELIMINAR RESPUESTA"><i class="fa fa-close" aria-hidden="true"></i></a>';
+                            echo '&nbsp;&nbsp;';
+                            echo '<a href="" onclick="verActivar(' . $respuesta['idRespuesta'] . '); return false;" title="ACTIVAR RESPUESTA"><i class="fa fa-power-off" aria-hidden="true" aria-hidden="true"></i></a>';
+                            echo '&nbsp;&nbsp;';
+                            echo '<td>' . $respuesta['respuesta'] . '</td>';
+                            echo '<td>' . $respuesta['estado'] . '</td>';
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalFormulario" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="overflow-y: scroll">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Formulario</h4>
+            </div>
+            <div class="modal-body">
+                <div style="padding: 10px" class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_content" id="divContenido"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <b>DOBLECLICK SOFTWARE E INGENIERIA S.A.S. &copy Copyright <?php echo date('Y'); ?></b>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="msgBloqueo" style="display: none;"> 
+    SU SOLICITUD ESTA SIENDO PROCESADA, POR FAVOR ESPERE...
+</div>
+

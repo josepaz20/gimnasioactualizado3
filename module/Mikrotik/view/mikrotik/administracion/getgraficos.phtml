@@ -1,0 +1,112 @@
+<div class="ln_solid"></div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>GRAFICA DE CONSUMO EN TIEMPO REAL.</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <p>La grafica se actualiza cada 5 segundos durante 1 minuto. (Exceptuando que se presente un error en la recepción de datos de consumo)</p>
+                <div id="chart_div"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Load the AJAX API-->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+
+    google.charts.load('current', {'packages': ['corechart']});
+    google.charts.setOnLoadCallback(init);
+
+    var interval = null;
+    var queueIP = '<?php echo $this->queueIP; ?>';
+    var consumosubida = <?php echo $this->consumosubida; ?>;
+    var consumobajada = <?php echo $this->consumobajada; ?>;
+    var errorGetGrafico = <?php echo $this->error; ?>;
+    var horaGetGrafico = '<?php echo $this->horaGetGrafico; ?>';
+    var numVeces = 1;
+    var where = 1;
+    function init() {
+        var options = {
+            width: 1000,
+            height: 400,
+            hAxis: {
+                title: 'Tiempo'
+            },
+            vAxis: {
+                title: 'Consumo (Mbps)',
+                minValue: 0, maxValue: 1
+            },
+            colors: ['#DF3A01', '#01DF3A'],
+            animation: {
+                duration: 1000,
+                easing: 'in'
+            }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'x');
+        data.addColumn('number', 'Carga');
+        data.addColumn('number', 'Descarga');
+        chart.draw(data, options);
+        if (parseInt(errorGetGrafico) === 0) {
+            console.log('Sin Error')
+            data.addRows([
+                [horaGetGrafico, consumosubida, consumobajada]
+            ]);
+            interval = setInterval(consumo, 5000);
+            function drawChart() {
+                chart.draw(data, options);
+                if (numVeces === 12) {
+                    clearInterval(interval); // stop the interval
+                    alert('LA RECEPCION DE DATOS DE CONSUMO HA FINALIZADO. ACTUALICE LA PAGINA PARA VER NUEVO CONSUMO.');
+                }
+                numVeces++;
+            }
+        } else if (parseInt(errorGetGrafico) === 1) {
+            alert('ERROR! No se ha recibido datos de Queue para realizar la peticion de consumo.');
+        } else if (parseInt(errorGetGrafico) === 2) {
+            alert('ERROR! No se ha podido estrablecer conexion con la Mikrotik.');
+        } else {
+            alert('ERROR! Se ha presentado un inconveniente inesperado.');
+        }
+        function consumo() {
+            $.ajax({
+                url: '/josandro/mikrotik/administracion/getConsumoTiempoRealGrafico',
+                data: {queueIP: queueIP},
+                type: 'GET',
+                dataType: 'json',
+                success: function (json) {
+                    console.log(json)
+                    if (parseInt(json['error']) === 0) {
+                        var x = json['horaConsumoTiempoReal'];
+                        var consumoS = json['consumosubida'];
+                        var consumoB = json['consumobajada'];
+                        data.insertRows(where, [[x.toString(), consumoS, consumoB]]);
+                        drawChart();
+                        where++;
+                    } else if (parseInt(json['error']) === 1) {
+                        clearInterval(interval); // stop the interval
+                        alert('ERROR! No se ha recibido datos de Queue para realizar la peticion de consumo.');
+                    } else if (parseInt(json['error']) === 2) {
+                        clearInterval(interval); // stop the interval
+                        alert('ERROR! No se ha podido estrablecer conexion con la Mikrotik.');
+                    } else {
+                        clearInterval(interval); // stop the interval
+                        alert('ERROR! Se ha presentado un inconveniente inesperado.');
+                    }
+                },
+                error: function (xhr, status) {
+                    alert('Disculpe, existió un problema');
+                }
+            });
+        }
+    }
+</script>

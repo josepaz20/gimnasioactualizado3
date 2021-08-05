@@ -1,0 +1,27 @@
+<p class="text-muted font-13 m-b-30">
+    A continuacion se listan todas las empleados registradas en el sistema que no han sido anexadas al actual Contrato.
+</p><br>
+<table id="tblCargo" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>CARGO</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($this->cargos as $cargo) {
+                            echo '<tr>';
+                            echo '<td>' . $cargo->getPk_cargo_id() . '</td>';
+                            echo '<td>' . $cargo->getCargo() . '</td>';
+                            echo '<td>';
+                            echo '<a href="" onclick="verEditar(' . $cargo->getPk_cargo_id() . '); return false;" title="Editar este Cargo"><i class="fa fa-edit"></i></a>';
+                            echo '&nbsp;&nbsp;';
+                            echo '<a href="" onclick="verDetalle(' . $cargo->getPk_cargo_id() . '); return false;" title="Ver este Cargo a Detalle"><i class="fa fa-eye"></i></a>';
+                            echo '</td>';
+                            echo '</tr>';
+                        }
+                        ?>
+                    </tbody>
+                </table>

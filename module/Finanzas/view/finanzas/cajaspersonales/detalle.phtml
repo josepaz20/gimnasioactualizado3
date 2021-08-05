@@ -1,0 +1,172 @@
+<div class="clearfix"></div>
+<?php
+$form = $this->form;
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<fieldset>
+    <legend>REGISTRO DE CLIENTE</legend>   
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="empleado">Encargado<span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="text" id="empleado" name="empleado" value="<?php echo $this->empleado; ?>" class="form-control" readonly>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cliente">Cliente <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('cliente')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="identificacion">Identificacion<span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('identificacion')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="telefono">Teléfono Personal<span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('telefono')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="entrenamiento">Entrenamiento<span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('entrenamiento')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">E-Mail<span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('email')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fechahorareg">Fecha de Ingreso <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('fechahorareg')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fecharet">Fecha de Retiro <span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('fecharet')); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="sexo">Sexo<span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('sexo')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="antecedentes">Antecedentes/Lesiones<span class="required">*</span></label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <?php echo $this->formRow($form->get('antecedentes')); ?>
+        </div>
+    </div>
+
+    <div 
+        <div id="divInfoEntrenamiento" >
+            <legend>PAGO DE CLIENTE</legend>
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="valor">Costo.<span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <?php echo $this->formRow($form->get('valor')); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pago">Forma de Pago<span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <?php echo $this->formRow($form->get('pago')); ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ingreso">Ingreso<span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <?php echo $this->formRow($form->get('ingreso')); ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="devolucion">Devolucion<span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <?php echo $this->formRow($form->get('devolucion')); ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pendiente">Pendiente<span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <?php echo $this->formRow($form->get('pendiente')); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="estado">Estado <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <?php echo $this->formRow($form->get('estado')); ?>
+                </div>
+            </div
+        </div>
+    </div>
+    <div class="ln_solid"></div>
+    <fieldset>
+        <div class="ln_solid"></div>
+        <div hidden>
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="idRegistro">Id Registro <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <?php echo $this->formRow($form->get('idRegistro')); ?>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="ln_solid"></div>
+    </fieldset>
+
+    <fieldset>
+        <legend>VALORACIÓN DE CLIENTE</legend>
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="objetivo">Objetivo<span class="required">*</span></label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <?php echo $this->formRow($form->get('objetivo')); ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="estatura">Estatura <span class="required">*</span></label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <?php echo $this->formRow($form->get('estatura')); ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="peso">Peso<span class="required">*</span></label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <?php echo $this->formRow($form->get('peso')); ?>
+            </div>
+        </div>
+
+        <div hidden>
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="idRegistro">Id Registro <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <?php echo $this->formRow($form->get('idRegistro')); ?>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="ln_solid"></div>
+        <div class="form-group">
+            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> CERRAR</button>
+
+            </div>
+        </div>
+    </fieldset>
+    <?php echo $this->form()->closeTag(); ?>

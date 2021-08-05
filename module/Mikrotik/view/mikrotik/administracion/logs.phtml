@@ -1,0 +1,242 @@
+<?php
+//--------- CARGAR MENSAJES DE ALERTA ------------------------------------------
+//$formBusquedas = $this->formBusquedas;
+$flash = $this->flashMessenger();
+$notificaciones = [
+    'success' => array_merge($flash->getSuccessMessages(), $flash->getCurrentSuccessMessages()),
+    'error' => array_merge($flash->getErrorMessages(), $flash->getCurrentErrorMessages()),
+    'alert' => array_merge($flash->getMessages(), $flash->getCurrentMessages()),
+    'information' => array_merge($flash->getInfoMessages(), $flash->getCurrentInfoMessages()),
+    'warning' => array_merge($flash->getWarningMessages(), $flash->getCurrentWarningMessages()),
+];
+$flash->clearCurrentMessages('default');
+$flash->clearCurrentMessages('info');
+$flash->clearCurrentMessages('success');
+$flash->clearCurrentMessages('warning');
+$flash->clearCurrentMessages('error');
+$mostrarMensajes = '';
+foreach (array_filter($notificaciones) as $tipo => $mensajes) {
+    switch ($tipo) {
+        case 'success': $tipoAux = '[ OK ]';
+            break;
+        case 'error': $tipoAux = '[ ERROR ]';
+            break;
+        case 'alert': $tipoAux = '[ ALERTA ]';
+            break;
+        case 'information': $tipoAux = '[ INFORMACION ]';
+            break;
+        case 'warning': $tipoAux = '[ PRECAUCION ]';
+            break;
+    }
+    foreach ($mensajes as $mensaje) {
+        $mostrarMensajes .= '$.notify({
+                                title: "<b>' . $tipoAux . ' -- </b>",
+                                message: "<span style=\'font-size: 90%\'>' . $mensaje . '</span>"
+                            },{
+                                type: "' . $tipo . '"
+                            });';
+    }
+}
+//------------------------------------------------------------------------------
+
+$title = 'Mikrotik - Log ';
+$this->headTitle($title);
+$this->headLink()->prependStylesheet($this->basePath('/public/css/animate.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/dataTables.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/buttons.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/responsive.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/scroller.bootstrap.min.css'))
+        ->prependStylesheet($this->basePath('/public/css/green.css'));
+
+$this->headScript()->prependScript('
+            $(document).ajaxStop($.unblockUI); 
+            $(document).ready(function() {
+                $("#tblIndex").DataTable({
+                    responsive: true,
+                    "iDisplayLength": 25,
+                        "sPaginationType": "full_numbers",
+                        "oLanguage": {
+                            "sLengthMenu": "Mostrar: _MENU_ registros por pagina",
+                            "sZeroRecords": "NO SE HA ENCONTRADO INFORMACION",
+                            "sInfo": "Mostrando <b>_START_</b> a <b>_END_</b> registros <br>TOTAL REGISTROS: <b>_TOTAL_</b> Registros</b>",
+                            "sInfoEmpty": "Mostrando 0 A 0 registros",
+                            "sInfoFiltered": "(Filtrados de un total de <b>_MAX_</b> registros)",
+                            "sLoadingRecords": "CARGANDO...",
+                            "sProcessing": "EN PROCESO...",
+                            "sSearch": "Buscar:",
+                            "sEmptyTable": "NO HAY INFORMACION DISPONIBLE PARA LA TABLA",
+                            "oPaginate": {
+                                "sFirst": "<i class=\'fa fa-fast-backward\' aria-hidden=\'true\' title=\'Inicio\'></i>",
+                                "sPrevious": "<i class=\'fa fa-step-backward\' aria-hidden=\'true\' title=\'Anterior\'></i>",
+                                "sNext": "<i class=\'fa fa-step-forward\' aria-hidden=\'true\' title=\'Siguiente\'></i>",
+                                "sLast": "<i class=\'fa fa-fast-forward\' aria-hidden=\'true\' title=\'Fin\'></i>",
+                            }
+                    },
+                    "aaSorting": [[0, "desc"]]
+                });                
+                //------------------------------------------------------------------------------
+                // MANIPULACION DEL EVENTO DE CIERRE DEL MODAL
+                //------------------------------------------------------------------------------
+                $("#modalFormulario").on("hide.bs.modal", function (e) {
+                    if(confirm("¿ DESEAS CERRAR EL FORMULARIO ?")){
+                        //DETENER EJECUCION AUTOMATICA DE LA OBTENCION DE DATOS DE CONSUMO AL CERRAR EL MODAL
+                        numVeces = 1;
+                        clearInterval(interval);
+                    } else {
+                        return false;
+                    }
+                });
+                //------------------------------------------------------------------------------
+                // MARCAR TODOS LOS CHECKBOX
+                //------------------------------------------------------------------------------
+                $("#checkTodos").change(function () {
+                    $("input:checkbox").prop("checked", $(this).prop("checked"));
+                });
+                //------------------------------------------------------------------------------
+                ' . $mostrarMensajes . '
+            });', 'text/javascript', array('noescape' => true))
+        ->prependFile($this->basePath('/public/js/sistema/mikrotik.js'))
+        ->prependFile($this->basePath('/public/js/jquery.blockUI.js'))
+        ->prependFile($this->basePath('/public/js/bootstrap-notify.min.js'))
+        ->prependFile($this->basePath('/public/js/datatables.scroller.min.js'))
+        ->prependFile($this->basePath('/public/js/responsive.bootstrap.js'))
+        ->prependFile($this->basePath('/public/js/dataTables.responsive.min.js'))
+        ->prependFile($this->basePath('/public/js/buttons.bootstrap.min.js'))
+        ->prependFile($this->basePath('/public/js/dataTables.buttons.min.js'))
+        ->prependFile($this->basePath('/public/js/dataTables.bootstrap.min.js'))
+        ->prependFile($this->basePath('/public/js/jquery.dataTables.min.js'));
+?>
+<div class="page-title">
+    <div class="title_left">
+        <h3><i class="fa fa-asterisk"></i> -- Mikrotik <small>LOG</small></h3>
+    </div>
+    <div class="title_right">
+        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Buscar...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">IR!</button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <!--        <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Busqueda <small>FILTROS</small></h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <p class="text-muted font-13 m-b-30">
+                            Utilice los siguientes filtros busqueda para obtener los Clientes registrados en la Mikrotik.
+                        </p>
+                        <form action="index" method="GET" class="form-horizontal form-label-left" onsubmit="return confirm('¿ DESEA IR A LOS REGISTROS DE ESTA LISTA ?')">
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="lista">LISTA:</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select id="lista" name="lista" class="form-control" required>
+        <?php
+        $selectedCorte = '';
+        $selectedActivo = '';
+        if ($this->lista == 'corte') {
+            $selectedCorte = 'selected';
+        } else {
+            $selectedActivo = 'selected';
+        }
+        ?>
+                                        <option value="">Seleccione...</option>
+                                        <option value="activo" <?php echo $selectedActivo; ?>>Activo</option>
+                                        <option value="corte" <?php echo $selectedCorte; ?>>Corte</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                    <input type="submit" value="Buscar" class="btn btn-primary">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>-->
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Registro de Logs <small>MIKROTIK</small></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>    
+                        <!--<button type="button" onclick="verRegistrar()" class="btn btn-success"><i class="fa fa-plus"></i> Registrar Abonado</button>-->
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <p class="text-muted font-13 m-b-30">
+                    A continuacion se listan todas los Logs registrados en la Mikrotik.
+                </p>
+                <table id="tblIndex" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th></th>
+                            <th>FECHA</th>
+                            <th>MENSAJE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+//                        print_r($this->registros[0]);
+                        foreach ($this->registros as $registro) {
+                            echo '<tr>';
+                            echo '<td>' . $registro['.id'] . '</td>';
+                            echo '<td>';
+//                            echo '&nbsp;&nbsp;<a href="javascript:verEditarSecret(\'' . $registro['.id'] . '\')" title="EDITAR ESTE SECRET"><i class="fa fa-edit"></i></a>';
+//                            echo '&nbsp;&nbsp;<a href="javascript:verEliminarSecret(\'' . $registro['.id'] . '\')" title="ELIMINAR ESTE SECRET"><i class="fa fa-times"></i></a>';
+                            echo '</td>';
+                            echo '<td>' . $registro['time'] . '</td>';
+                            echo '<td>' . $registro['message'] . '</td>';
+                            echo '</tr>';
+                        }
+                        ?>
+                    </tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalFormulario" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="overflow-y: scroll">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Formulario</h4>
+            </div>
+            <div class="modal-body">
+                <div style="padding: 10px" class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_content" id="divContenido"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <b>DOBLECLICK SOFTWARE E INGENIERIA S.A.S. &copy Copyright <?php echo date('Y'); ?></b>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="msgBloqueo" style="display: none;"> 
+    SU SOLICITUD ESTA SIENDO PROCESADA, POR FAVOR ESPERE...
+</div>
